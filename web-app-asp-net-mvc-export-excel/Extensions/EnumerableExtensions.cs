@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
+using web_app_asp_net_mvc_export_excel.Models;
 using web_app_asp_net_mvc_export_excel.Models.Xlsx;
 
 namespace web_app_asp_net_mvc_export_excel.Extensions
@@ -69,7 +70,6 @@ namespace web_app_asp_net_mvc_export_excel.Extensions
 
             return ms;
         }
-
-
-    }
+        
+        }
 }

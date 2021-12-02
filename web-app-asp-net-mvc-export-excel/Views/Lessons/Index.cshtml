@@ -72,8 +72,9 @@
     </tbody>
 </table>
 <br>
-<div class="btn-create" style="display: flex; justify-content: flex-end;">
+<div class="btn-create" >
     @Html.ActionLink("Добавить запись", "Create", controllerName, null, new { @class = "btn btn-outline-dark" })
+    @Html.ActionLink("Excel", "GetXlsx", controllerName, null, new { @class = "btn btn-outline-dark", style = "margin: 0px 15px 0px 15px;" })
 </div>
  
 <br>

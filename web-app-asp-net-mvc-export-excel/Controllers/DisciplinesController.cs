@@ -99,7 +99,7 @@ namespace web_app_asp_net_mvc_export_excel.Controllers
             var db = new TimetableContext();
             var xlsx = db.Disciplines.ToXlsx();
 
-            return File(xlsx.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Data.xlsx");
+            return File(xlsx.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Disciplines.xlsx");
         }
 
     }

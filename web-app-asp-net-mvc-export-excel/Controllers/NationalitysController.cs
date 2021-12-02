@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using web_app_asp_net_mvc_export_excel.Extensions;
 using web_app_asp_net_mvc_export_excel.Models;
 
 namespace web_app_asp_net_mvc_export_excel.Controllers
@@ -88,6 +89,15 @@ namespace web_app_asp_net_mvc_export_excel.Controllers
         private void MappingNationality(Nationality sourse, Nationality destination)
         {
             destination.Name = sourse.Name;
+        }
+
+        [HttpGet]
+        public ActionResult GetXlsx()
+        {
+            var db = new TimetableContext();
+            var xlsx = db.Nationalitys.ToXlsx();
+
+            return File(xlsx.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Nationalities.xlsx");
         }
     }
 }

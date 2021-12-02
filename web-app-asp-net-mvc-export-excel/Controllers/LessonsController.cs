@@ -3,6 +3,9 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Spreadsheet;
 using web_app_asp_net_mvc_export_excel.Extensions;
 using web_app_asp_net_mvc_export_excel.Models;
 
@@ -135,6 +138,48 @@ namespace web_app_asp_net_mvc_export_excel.Controllers
                 return RedirectPermanent("/Lessons/Index");
 
             return View(lesson);
+        }
+
+        [HttpGet]
+        public FileResult GetXlsx(Lesson model)
+        {
+            var db = new TimetableContext();
+            var values = db.Lessons.ToList();
+            var wb = new XLWorkbook();
+            var ws = wb.Worksheets.Add("Data");
+
+            
+            ws.Cell("A" + 1).Value = "Id";
+            ws.Cell("B" + 1).Value = "Номер пары";
+            ws.Cell("C" + 1).Value = "Дисциплина";
+            ws.Cell("D" + 1).Value = "Группа(ы)";
+            ws.Cell("E" + 1).Value = "Преподаватель";
+
+            int row = 2;
+            foreach(var value in values){
+                ws.Cell("A" + row).Value = value.Id;
+                ws.Cell("B" + row).Value = value.Number;
+                ws.Cell("C" + row).Value = value.Discipline.Name;
+                ws.Cell("D" + row).Value = string.Join(", ", value.Groups.Select(x => $"{x.GroupName}"));
+                ws.Cell("E" + row).Value = value.Teacher.Name;
+                row++;
+            };
+            var rngHead = ws.Range("A1:E"+1);
+            rngHead.Style.Fill.BackgroundColor=XLColor.AshGrey;
+                        
+            var rngTable = ws.Range("A1:E" + 10);
+            rngTable.Style.Border.RightBorder = XLBorderStyleValues.Thin;
+            rngTable.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+
+            ws.Columns().AdjustToContents(); 
+
+
+
+            using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Timetable.xlsx");
+                }
         }
     }
 }

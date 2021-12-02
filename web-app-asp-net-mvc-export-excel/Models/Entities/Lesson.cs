@@ -27,11 +27,33 @@ namespace web_app_asp_net_mvc_export_excel.Models
         public int Number { get; set; }
 
         /// <summary>
-        /// Название пары
-        /// </summary>    
-        ///[Required]
-        ///[Display(Name = "Пара", Order = 2)]
-        ///public String Name { get; set; }
+        /// Дисциплина
+        /// </summary> 
+        [ScaffoldColumn(false)]
+        public int DisciplineId { get; set; }
+        [ScaffoldColumn(false)]
+        public virtual Discipline Discipline { get; set; }
+        [Display(Name = "Дисциплина", Order = 2)]
+        [UIHint("RadioList")]
+        [TargetProperty("DisciplineId")]
+        [NotMapped]
+        public IEnumerable<SelectListItem> DisciplineDictionary
+        {
+            get
+            {
+                var db = new TimetableContext();
+                var query = db.Disciplines;
+
+                if (query != null)
+                {
+                    var dictionary = new List<SelectListItem>();
+                    dictionary.AddRange(query.OrderBy(d => d.Name).ToSelectList(c => c.Id, c => c.Name, c => c.Id == DisciplineId));
+                    return dictionary;
+                }
+
+                return new List<SelectListItem> { new SelectListItem { Text = "", Value = "" } };
+            }
+        }
 
         /// <summary>
         /// Группа, у которой будет пара
@@ -94,34 +116,7 @@ namespace web_app_asp_net_mvc_export_excel.Models
             }
         }
 
-        /// <summary>
-        /// Дисциплина
-        /// </summary> 
-        [ScaffoldColumn(false)]
-        public int DisciplineId { get; set; }
-        [ScaffoldColumn(false)]
-        public virtual Discipline Discipline { get; set; }
-        [Display(Name = "Дисциплина", Order = 2)]
-        [UIHint("RadioList")]
-        [TargetProperty("DisciplineId")]
-        [NotMapped]
-        public IEnumerable<SelectListItem> DisciplineDictionary
-        {
-            get
-            {
-                var db = new TimetableContext();
-                var query = db.Disciplines;
-
-                if (query != null)
-                {
-                    var dictionary = new List<SelectListItem>();
-                    dictionary.AddRange(query.OrderBy(d => d.Name).ToSelectList(c => c.Id, c => c.Name, c => c.Id == DisciplineId));
-                    return dictionary;
-                }
-
-                return new List<SelectListItem> { new SelectListItem { Text = "", Value = "" } };
-            }
-        }
+        
 
 
 

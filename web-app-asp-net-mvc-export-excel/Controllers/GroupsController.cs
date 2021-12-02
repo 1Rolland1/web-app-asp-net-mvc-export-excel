@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using web_app_asp_net_mvc_export_excel.Models;
+using web_app_asp_net_mvc_export_excel.Extensions;
 
 namespace web_app_asp_net_mvc_export_excel.Controllers
 {
@@ -104,6 +105,15 @@ namespace web_app_asp_net_mvc_export_excel.Controllers
 
             if (sourse.NationalityIds != null && sourse.NationalityIds.Any())
                 destination.Nationalitys = db.Nationalitys.Where(s => sourse.NationalityIds.Contains(s.Id)).ToList();
+        }
+
+        [HttpGet]
+        public ActionResult GetXlsx()
+        {
+            var db = new TimetableContext();
+            var xlsx = db.Groups.ToXlsx();
+
+            return File(xlsx.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Groups.xlsx");
         }
     }
 }
